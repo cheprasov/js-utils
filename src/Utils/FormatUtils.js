@@ -1,7 +1,5 @@
 // @flow
 
-import TypeUtils from './TypeUtils';
-
 export default class FormatUtils {
 
     static formatNumber(
@@ -11,10 +9,18 @@ export default class FormatUtils {
         decimalSeparator: string = '.',
         decimalLength: null | number = null,
     ): string {
-        const num = TypeUtils.isNumber(value) ? value : Number(value);
-        const valueParts = String(decimalLength !== null ? num.toFixed(decimalLength) : num).split('.');
-        valueParts[0] = valueParts[0].replace(new RegExp(`(\\d)(?=(\\d{${sepLength}})+$)`, 'g'), `$1${separator}`);
-        return valueParts.join(decimalSeparator);
+        let strValue: string;
+        if (decimalLength !== null) {
+            strValue = Number(value).toFixed(decimalLength).toString();
+        } else {
+            strValue = String(value);
+        }
+        const strValueParts: string[] = strValue.split('.');
+        strValueParts[0] = strValueParts[0].replace(
+            new RegExp(`(\\d)(?=(\\d{${sepLength}})+$)`, 'g'),
+            `$1${separator}`,
+        );
+        return strValueParts.join(decimalSeparator);
     }
 
 }
